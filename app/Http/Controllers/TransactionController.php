@@ -69,4 +69,53 @@ class TransactionController extends Controller
         $transaction->delete();
         return redirect()->route('transactions.index');
     }
+
+    // EDIT: Show the form with existing data
+    public function edit(Transaction $transaction)
+    {
+        // DATA ISOLATION: Ensure the user owns this transaction
+        if ($transaction->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('transactions.edit', compact('transaction'));
+    }
+
+    // UPDATE: Save the changes to the DB
+    public function update(Request $request, Transaction $transaction)
+    {
+        // DATA ISOLATION Check
+        if ($transaction->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $request->validate([
+            'amount' => 'required|numeric',
+            'type' => 'required|in:income,expense',
+            'description' => 'required|string',
+            'receipt_image' => 'nullable|image|max:2048'
+        ]);
+
+        // 1. Handle File Upload (If a new file is provided)
+        if ($request->hasFile('receipt_image')) {
+            // Delete old image if it exists
+            if ($transaction->receipt_image_url) {
+                Storage::disk('public')->delete($transaction->receipt_image_url);
+            }
+
+            // Store new image and update the path
+            $path = $request->file('receipt_image')->store('receipts', 'public');
+            $transaction->receipt_image_url = $path;
+        }
+
+        // 2. Update other text fields
+        $transaction->amount = $request->amount;
+        $transaction->type = $request->type;
+        $transaction->description = $request->description;
+        
+        // 3. Save
+        $transaction->save();
+
+        return redirect()->route('transactions.index')->with('success', 'Transaction updated!');
+    }
 }
