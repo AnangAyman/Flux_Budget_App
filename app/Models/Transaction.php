@@ -13,6 +13,10 @@ class Transaction extends Model
         'user_id', 'amount', 'type', 'description', 'receipt_image_url'
     ];
 
+    protected $casts = [
+        'amount' => 'decimal:2',
+    ];
+
     // A Transaction belongs to one User
     public function user() {
         return $this->belongsTo(User::class);

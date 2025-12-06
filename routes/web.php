@@ -1,18 +1,29 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SettingsController; // Ensure this is imported
 
-// 1. Localization Route (Switch Language)
+// 1. Localization Route (for language only)
 Route::get('/lang/{locale}', function ($locale) {
     if (in_array($locale, ['en', 'id'])) {
-        session(['locale' => $locale]); // Store preference in session
+        session(['locale' => $locale]);
     }
     return redirect()->back();
 })->name('lang.switch');
 
-// 2. Guest Routes (Login/Register)
+// 1a. Currency Route (for currency only)
+Route::get('/currency/{currency}', function ($currency) {
+    if (in_array($currency, ['USD', 'IDR'])) {
+        session(['currency' => $currency]);
+    }
+    return redirect()->back();
+})->name('currency.switch');
+
+// 2. Guest Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -20,15 +31,33 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-// 3. Protected Routes (Require Login)
+// 3. Protected Routes
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
-    // Resource Controller handles index, create, store, edit, update, destroy
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Settings Route
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+
     Route::resource('transactions', TransactionController::class);
 });
 
-// Default redirect
+// 4. Default Redirect
 Route::get('/', function () {
-    return redirect()->route('transactions.index');
-});
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+    return view('landing');
+})->name('home');
+
+// Currency Route (for currency only)
+Route::get('/currency/{currency}', function ($currency) {
+    if (in_array($currency, ['USD', 'IDR'])) {
+        session(['currency' => $currency]);
+        
+        // Clear any cached currency data
+        session()->forget('exchange_rate');
+    }
+    return redirect()->back();
+})->name('currency.switch');
