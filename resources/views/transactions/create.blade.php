@@ -8,7 +8,7 @@
 
 @section('content')
 
-<div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
+<div class="form-header">
     <div>
         <h1>{{ __('create_title') }}</h1>
         <p>{{ __('create_subtitle') }}</p>
@@ -31,7 +31,6 @@
     <form action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data" id="transactionForm">
         @csrf
 
-        <!-- Hidden field to store the currency being used -->
         <input type="hidden" name="input_currency" value="{{ $currentCurrency }}">
 
         @if ($errors->any())
@@ -111,7 +110,6 @@
             <label class="form-label" for="category">{{ __('create_category_label') }}</label>
             <select id="category" name="category" class="form-select @error('category') error @enderror" disabled>
                 <option value="" selected>{{ __('create_category_placeholder') }}</option>
-                <!-- Options will be populated by JavaScript -->
             </select>
             @error('category')
                 <div class="error-message">{{ $message }}</div>
@@ -180,21 +178,17 @@
         const categorySelect = document.getElementById('category');
         const selectedType = typeSelect.value;
         
-        // Clear current options
         categorySelect.innerHTML = '';
         
         if (selectedType === 'income' || selectedType === 'expense') {
-            // Enable the select
             categorySelect.disabled = false;
             
-            // Add options based on selected type
             const options = categoryOptions[selectedType];
             options.forEach(option => {
                 const optionElement = document.createElement('option');
                 optionElement.value = option.value;
                 optionElement.textContent = option.text;
                 
-                // Check if this was the previously selected value
                 if (option.value === '{{ old("category") }}') {
                     optionElement.selected = true;
                 }
@@ -202,7 +196,6 @@
                 categorySelect.appendChild(optionElement);
             });
         } else {
-            // No type selected, disable category
             categorySelect.disabled = true;
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
@@ -213,7 +206,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        // File input display
         const fileInput = document.getElementById('receipt_image');
         const fileName = document.getElementById('fileName');
         
@@ -227,7 +219,6 @@
             });
         }
         
-        // Form validation
         const form = document.getElementById('transactionForm');
         if (form) {
             form.addEventListener('submit', function() {
@@ -244,7 +235,6 @@
             updateCategoryOptions();
         }
         
-        // Add event listener for type change
         typeSelect.addEventListener('change', updateCategoryOptions);
         });
 </script>

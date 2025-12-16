@@ -19,13 +19,11 @@
         <p>{{ __('dashboard_subtitle') }}</p>
     </div>
     <div class="header-actions">
-        <!-- Currency Switcher -->
         <a href="{{ route('currency.switch', $currentCurrency == 'USD' ? 'IDR' : 'USD') }}" class="btn-secondary-custom">
             <i class="fas fa-coins"></i> 
             <span>{{ $currentCurrency == 'USD' ? 'USD ($)' : 'IDR (Rp)' }}</span>
         </a>
         
-        <!-- Add Transaction Button -->
         <a href="{{ route('transactions.create') }}" class="btn-primary-custom">
             <i class="fas fa-plus"></i>
             <span>{{ __('index_add_transaction') }}</span>
@@ -33,7 +31,6 @@
     </div>
 </div>
 
-<!-- Filter Container -->
 <form action="{{ route('transactions.index') }}" method="GET" class="filter-container">
     <div class="form-group">
         <label>{{ __('table_description') }}</label>
@@ -72,7 +69,6 @@
     @endif
 </form>
 
-<!-- Transactions Table -->
 <div class="transactions-section">
     @if($transactions->count() > 0)
     <div class="table-responsive">
@@ -112,10 +108,8 @@
                     <td>
                         @if($transaction->receipt_image_url)
                             @php
-                                // Check if the path is already a full URL or a storage path
                                 $receiptPath = $transaction->receipt_image_url;
                                 if (!Str::startsWith($receiptPath, 'http')) {
-                                    // If it's a storage path, use the storage URL helper
                                     $receiptPath = Storage::url($receiptPath);
                                 }
                             @endphp
@@ -153,7 +147,6 @@
         </table>
     </div>
     
-    <!-- Replace the entire pagination section with: -->
     @if($transactions->hasPages())
     <div class="pagination-container">
         <span class="page-info">
@@ -201,15 +194,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // File input display (if any)
-        // Simple pagination button logic (you might want to replace this with Laravel's built-in pagination)
+        // Simple pagination visual logic
         const pageButtons = document.querySelectorAll('.page-btn');
         pageButtons.forEach(button => {
             button.addEventListener('click', function() {
-                // Remove active class from all buttons
-                pageButtons.forEach(btn => btn.classList.remove('active'));
-                // Add active class to clicked button (if it's a number button)
-                if (!this.querySelector('i')) {
+                if (this.tagName === 'BUTTON' && !this.querySelector('i')) {
+                    pageButtons.forEach(btn => btn.classList.remove('active'));
                     this.classList.add('active');
                 }
             });
