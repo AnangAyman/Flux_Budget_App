@@ -858,4 +858,4 @@
 .text-muted { color: #94a3b8; }
 .text-secondary { color: var(--text-secondary-light); }
 .dark-mode .text-secondary { color: var(--text-secondary-dark); }
-.opacity-50 { opacity: 0.5; }y
+.opacity-50 { opacity: 0.5; }
