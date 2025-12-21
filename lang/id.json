@@ -41,8 +41,8 @@
     "label_language": "Bahasa Pilihan",
     "btn_signup": "Daftar",
     "divider_or": "atau lanjutkan dengan",
-    "btn_google": "Daftar dengan Google",
-    "btn_github": "Daftar dengan GitHub",
+    "btn_google_register": "Daftar dengan Google",
+    "btn_apple_register": "Daftar dengan Apple",
     "signup_footer_text": "Sudah punya akun?",
     "signup_footer_link": "Masuk",
 
@@ -54,8 +54,8 @@
     "forgot_password": "Lupa kata sandi?",
     "btn_login": "Masuk",
     "divider_or": "atau lanjutkan dengan",
-    "btn_google": "Masuk dengan Google",
-    "btn_github": "Masuk dengan GitHub",
+    "btn_google_login": "Masuk dengan Google",
+    "btn_apple_login": "Masuk dengan Apple",
     "login_footer_text": "Belum punya akun?",
     "login_footer_link": "Daftar",
 

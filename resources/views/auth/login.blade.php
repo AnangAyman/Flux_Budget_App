@@ -100,12 +100,12 @@
 
                     <button class="btn-social">
                         <i class="fab fa-google"></i>
-                        <span>{{ __('btn_google') }}</span>
+                        <span>{{ __('btn_google_login') }}</span>
                     </button>
 
                     <button class="btn-social">
-                        <i class="fab fa-github"></i>
-                        <span>{{ __('btn_github') }}</span>
+                        <i class="fab fa-apple"></i>
+                        <span>{{ __('btn_apple_login') }}</span>
                     </button>
 
                     <div class="login-footer">

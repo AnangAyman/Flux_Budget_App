@@ -7,7 +7,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\CurrencyController;
-use App\Http\Controllers\AnalyticsController; // Add this line
+use App\Http\Controllers\AnalyticsController;
 
 // 1. Localization Route (for language only)
 Route::get('/lang/{locale}', function ($locale) {

@@ -121,12 +121,12 @@
 
                     <a href="#" class="btn-social">
                         <i class="fab fa-google"></i>
-                        <span>{{ __('btn_google') }}</span>
+                        <span>{{ __('btn_google_register') }}</span>
                     </a>
 
                     <a href="#" class="btn-social">
-                        <i class="fab fa-github"></i>
-                        <span>{{ __('btn_github') }}</span>
+                        <i class="fab fa-apple"></i>
+                        <span>{{ __('btn_apple_register') }}</span>
                     </a>
 
                     <div class="signup-footer">

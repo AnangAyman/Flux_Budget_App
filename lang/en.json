@@ -41,8 +41,8 @@
     "label_language": "Preferred Language",
     "btn_signup": "Sign Up",
     "divider_or": "or continue with",
-    "btn_google": "Sign up with Google",
-    "btn_github": "Sign up with GitHub",
+    "btn_google_register": "Sign up with Google",
+    "btn_apple_register": "Sign up with Apple",
     "signup_footer_text": "Already have an account?",
     "signup_footer_link": "Login",
 
@@ -54,8 +54,8 @@
     "forgot_password": "Forgot password?",
     "btn_login": "Login",
     "divider_or": "or continue with",
-    "btn_google": "Login with Google",
-    "btn_github": "Login with GitHub",
+    "btn_google_login": "Login with Google",
+    "btn_apple_login": "Login with Apple",
     "login_footer_text": "Don't have an account?",
     "login_footer_link": "Sign Up",
 
