@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
 
+    Route::get('/transactions/calendar', [TransactionController::class, 'calendar'])->name('transactions.calendar');
     Route::resource('transactions', TransactionController::class);
 
     Route::get('/budget', [App\Http\Controllers\BudgetController::class, 'index'])->name('budget.index');

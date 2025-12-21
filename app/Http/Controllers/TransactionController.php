@@ -245,4 +245,54 @@ class TransactionController extends Controller
         
         return true;
     }
+
+    public function calendar(Request $request)
+    {
+        // Get month from request or use current month
+        $monthString = $request->get('month', now()->format('Y-m'));
+        $currentMonth = \Carbon\Carbon::parse($monthString . '-01');
+        
+        // Get previous and next months for navigation
+        $prevMonth = $currentMonth->copy()->subMonth();
+        $nextMonth = $currentMonth->copy()->addMonth();
+        
+        // Get start and end of month
+        $startOfMonth = $currentMonth->copy()->startOfMonth();
+        $endOfMonth = $currentMonth->copy()->endOfMonth();
+        
+        // Get all transactions for the month
+        $transactions = Transaction::where('user_id', Auth::id())
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+            ->orderBy('created_at', 'asc')
+            ->get();
+        
+        // Group transactions by date
+        $transactionsByDate = [];
+        foreach ($transactions as $transaction) {
+            $date = $transaction->created_at->format('Y-m-d');
+            if (!isset($transactionsByDate[$date])) {
+                $transactionsByDate[$date] = [];
+            }
+            $transactionsByDate[$date][] = $transaction;
+        }
+        
+        // Get calendar data
+        $daysInMonth = $currentMonth->daysInMonth;
+        $startDayOfWeek = $currentMonth->copy()->startOfMonth()->dayOfWeek;
+        
+        // Get current currency and exchange rate
+        $currentCurrency = session('currency', 'IDR');
+        $exchangeRate = $this->getExchangeRate();
+        
+        return view('transactions.calendar', compact(
+            'currentMonth',
+            'prevMonth',
+            'nextMonth',
+            'daysInMonth',
+            'startDayOfWeek',
+            'transactionsByDate',
+            'currentCurrency',
+            'exchangeRate'
+        ));
+    }
 }

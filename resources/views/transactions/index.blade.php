@@ -24,6 +24,11 @@
             <span>{{ $currentCurrency == 'USD' ? 'USD ($)' : 'IDR (Rp)' }}</span>
         </a>
         
+        <a href="{{ route('transactions.calendar') }}" class="btn-secondary-custom">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Calendar View</span>
+        </a>
+        
         <a href="{{ route('transactions.create') }}" class="btn-primary-custom">
             <i class="fas fa-plus"></i>
             <span>{{ __('index_add_transaction') }}</span>
