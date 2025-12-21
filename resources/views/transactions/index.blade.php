@@ -113,8 +113,8 @@
                                     $receiptPath = Storage::url($receiptPath);
                                 }
                             @endphp
-                            <a href="{{ $receiptPath }}" target="_blank" class="btn btn-sm btn-light border">
-                                <i class="fas fa-file-image text-secondary"></i>
+                            <a href="{{ $receiptPath }}" target="_blank" class="btn-link">
+                                <i class="fas fa-paperclip"></i> View
                             </a>
                         @else
                             <span class="text-secondary opacity-50">-</span>

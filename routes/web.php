@@ -40,6 +40,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
 
     Route::resource('transactions', TransactionController::class);
+
+    Route::get('/budget', [App\Http\Controllers\BudgetController::class, 'index'])->name('budget.index');
+    Route::get('/budget/create', [App\Http\Controllers\BudgetController::class, 'create'])->name('budget.create');
+    Route::post('/budget', [App\Http\Controllers\BudgetController::class, 'store'])->name('budget.store');
+    Route::get('/budget/{budget}/edit', [App\Http\Controllers\BudgetController::class, 'edit'])->name('budget.edit');
+    Route::put('/budget/{budget}', [App\Http\Controllers\BudgetController::class, 'update'])->name('budget.update');
+    Route::delete('/budget/{budget}', [App\Http\Controllers\BudgetController::class, 'destroy'])->name('budget.destroy');
 });
 
 // 4. Default Redirect

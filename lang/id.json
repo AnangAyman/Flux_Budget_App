@@ -184,6 +184,73 @@
     "edit_amount_placeholder_idr": "100000",
     "edit_amount_placeholder_usd": "10.00",
 
+    "budget_meta_title_add": "Tambah Anggaran - Flux",
+    "budget_meta_title_edit": "Ubah Anggaran - Flux",
+    "budget_meta_title_index": "Anggaran - Flux",
+
+    "budget_create_title": "Buat Anggaran",
+    "budget_create_subtitle": "Tetapkan batas pengeluaran untuk kategori",
+    "budget_edit_title": "Ubah Anggaran",
+    "budget_edit_subtitle": "Perbarui batas pengeluaran untuk :category",
+    "budget_management_title": "Manajemen Anggaran",
+    "budget_management_subtitle": "Tetapkan dan lacak batas pengeluaran Anda per kategori",
+
+    "menu_budget": "Anggaran",
+    "budget_btn_add": "Tambah Anggaran",
+    "budget_btn_save": "Simpan Anggaran",
+    "budget_btn_update": "Perbarui Anggaran",
+    "budget_btn_cancel": "Batal",
+    "budget_btn_edit": "Ubah",
+    "budget_btn_delete": "Hapus",
+    "budget_btn_creating": "Menyimpan...",
+    "budget_btn_updating": "Memperbarui...",
+    "budget_btn_back": "Kembali ke Dasbor",
+
+    "budget_overview_total": "Total Anggaran",
+    "budget_overview_spent": "Total Terpakai",
+    "budget_overview_remaining": "Sisa",
+
+    "budget_status_over": "Melebihi Anggaran",
+    "budget_status_warning": "Peringatan",
+    "budget_status_on_track": "Aman",
+
+    "budget_card_budget": "Anggaran",
+    "budget_card_spent": "Terpakai",
+    "budget_card_remaining": "Sisa",
+    "budget_card_used": ":percentage% digunakan",
+
+    "budget_form_category_label": "Kategori",
+    "budget_form_category_placeholder": "Pilih kategori",
+    "budget_form_category_all_taken": "Semua kategori sudah memiliki anggaran",
+    "budget_form_category_hint": "Hanya kategori pengeluaran tanpa anggaran aktif yang ditampilkan",
+    "budget_form_category_locked_hint": "Kategori tidak dapat diubah. Hapus dan buat anggaran baru jika diperlukan.",
+
+    "budget_form_amount_label": "Jumlah Anggaran (:currency)",
+    "budget_form_amount_usd_note": "(akan dikonversi ke IDR)",
+    "budget_form_amount_idr_hint": "Jumlah ini akan disimpan dalam IDR",
+    "budget_form_exchange_rate": "Nilai tukar: $1 = Rp :rate",
+    "budget_form_stored_idr": "Saat ini tersimpan: Rp :amount",
+    "budget_form_stored_usd": "Nilai tukar: $1 = Rp :rate | Tersimpan: Rp :stored_amount",
+
+    "budget_tips_title": "Tips Anggaran",
+    "budget_tip_1": "Tetapkan anggaran realistis berdasarkan pendapatan dan pengeluaran Anda",
+    "budget_tip_2": "Tinjau dan sesuaikan anggaran Anda setiap bulan",
+    "budget_tip_3": "Anggaran membantu Anda melacak pengeluaran dalam kategori tertentu",
+    "budget_tip_4": "Anda akan mendapatkan peringatan saat mencapai 80% dari anggaran",
+
+    "budget_update_tips_title": "Tips Pembaruan",
+    "budget_update_tip_1": "Meningkatkan anggaran memberi Anda lebih banyak ruang belanja",
+    "budget_update_tip_2": "Menurunkan anggaran mungkin membuat Anda langsung melebihi batas jika sudah terpakai",
+    "budget_update_tip_3": "Perubahan anggaran berlaku segera",
+    "budget_update_tip_4": "Pengeluaran masa lalu tidak terpengaruh oleh perubahan anggaran",
+
+    "budget_status_section_title": "Status Anggaran Saat Ini",
+    "budget_status_limit": "Batas Anggaran",
+    "budget_status_spent_month": "Terpakai Bulan Ini",
+
+    "budget_delete_confirm": "Apakah Anda yakin ingin menghapus anggaran ini?",
+    "budget_no_data": "Belum ada anggaran. Buat anggaran pertama Anda untuk mulai melacak pengeluaran!",
+
     "analytics_title": "Analitik & Wawasan",
     "analytics_subtitle": "Dapatkan wawasan mendalam tentang pola pengeluaran Anda",
     "analytics_total_income": "Total Pemasukan",

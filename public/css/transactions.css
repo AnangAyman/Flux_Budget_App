@@ -791,6 +791,25 @@
     background-color: rgba(16, 185, 129, 0.15);
 }
 
+.btn-link {
+    color: var(--primary-light);
+    text-decoration: none;
+    transition: color 0.3s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+.dark-mode .btn-link {
+    color: var(--primary-dark);
+}
+.btn-link:hover {
+    text-decoration: underline;
+}
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
     .transactions-header {
