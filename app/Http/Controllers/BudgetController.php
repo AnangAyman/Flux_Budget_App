@@ -4,42 +4,97 @@ namespace App\Http\Controllers;
 
 use App\Models\Budget;
 use App\Models\Transaction;
+use App\Models\RecurringBill; // Added
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Carbon\Carbon; // Added
 
 class BudgetController extends Controller
 {
     public function index()
     {
         $userId = Auth::id();
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+        $endOfMonth = Carbon::now()->endOfMonth();
         
         // 1. Get all budgets for the user
         $budgets = Budget::where('user_id', $userId)->get();
         
         // 2. Calculate actual spending for THIS MONTH per category
-        // We only sum 'expense' type transactions
         $spending = Transaction::where('user_id', $userId)
             ->where('type', 'expense')
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
             ->selectRaw('category, SUM(amount) as total_spent')
             ->groupBy('category')
             ->pluck('total_spent', 'category');
 
-        // 3. Merge data for the view
-        $budgetData = $budgets->map(function ($budget) use ($spending) {
+        // 3. Calculate Upcoming Recurring Bills for THIS MONTH
+        // We fetch active expense bills and project them to the end of the month
+        $recurringBills = RecurringBill::where('user_id', $userId)
+            ->where('is_active', true)
+            ->where('type', 'expense')
+            ->get();
+
+        $recurringForecast = [];
+
+        foreach ($recurringBills as $bill) {
+            // Parse the next payment date
+            $nextDate = Carbon::parse($bill->next_payment_date);
+
+            // Loop to catch multiple occurrences (e.g. weekly bills) within this month
+            // We loop while the date is still in the current month (and not in the past relative to the month start, though query handles that)
+            // Note: We only care if it falls within the *remaining* part of the month or just 'in this month' generally?
+            // Usually a budget is for the whole month.
+            // If the bill was already paid (Transaction created), next_payment_date is in the future.
+            // If next_payment_date is still in THIS month, it's a pending expense.
+            
+            $tempDate = $nextDate->copy();
+            
+            while ($tempDate->lte($endOfMonth)) {
+                // Ensure we are looking at dates strictly in the current month/year 
+                // (Though the loop condition $tempDate->lte($endOfMonth) mostly handles it, 
+                // we ensure we don't pick up old overdue ones unless you want them to count)
+                if ($tempDate->month == $currentMonth && $tempDate->year == $currentYear) {
+                    if (!isset($recurringForecast[$bill->category])) {
+                        $recurringForecast[$bill->category] = 0;
+                    }
+                    $recurringForecast[$bill->category] += $bill->amount;
+                }
+
+                // Advance date based on frequency
+                if ($bill->frequency === 'weekly') {
+                    $tempDate->addWeek();
+                } elseif ($bill->frequency === 'monthly') {
+                    $tempDate->addMonth();
+                } elseif ($bill->frequency === 'yearly') {
+                    $tempDate->addYear();
+                } else {
+                    break; 
+                }
+            }
+        }
+
+        // 4. Merge data for the view
+        $budgetData = $budgets->map(function ($budget) use ($spending, $recurringForecast) {
             $spent = $spending[$budget->category] ?? 0;
-            $percentage = $budget->amount > 0 ? ($spent / $budget->amount) * 100 : 0;
+            $recurring = $recurringForecast[$budget->category] ?? 0;
+            
+            $totalUsed = $spent + $recurring;
+            $percentage = $budget->amount > 0 ? ($totalUsed / $budget->amount) * 100 : 0;
             
             return (object) [
                 'id' => $budget->id,
                 'category' => $budget->category,
                 'budget_limit' => $budget->amount,
                 'spent' => $spent,
-                'remaining' => $budget->amount - $spent,
-                'percentage' => min($percentage, 100), // Cap at 100 for bar width
-                'is_over_budget' => $spent > $budget->amount
+                'recurring' => $recurring, // Passed to view
+                'total_used' => $totalUsed,
+                'remaining' => $budget->amount - $totalUsed,
+                'percentage' => min($percentage, 100),
+                'is_over_budget' => $totalUsed > $budget->amount
             ];
         });
 
@@ -59,7 +114,6 @@ class BudgetController extends Controller
         $allCategories = ['Food', 'Shopping', 'Transportation', 'Entertainment', 'Bills & Utilities', 'Healthcare', 'Education', 'Travel', 'Other'];
         $availableCategories = array_diff($allCategories, $existingCategories);
 
-        // Get currency settings
         $currentCurrency = session('currency', 'IDR');
         $exchangeRate = $this->getExchangeRate();
 
@@ -73,7 +127,6 @@ class BudgetController extends Controller
             'amount' => 'required|numeric|min:0.01',
         ]);
 
-        // Check if budget already exists for this category
         $exists = Budget::where('user_id', Auth::id())
                        ->where('category', $request->category)
                        ->exists();
@@ -82,7 +135,6 @@ class BudgetController extends Controller
             return back()->withErrors(['category' => 'A budget for this category already exists.'])->withInput();
         }
 
-        // Currency conversion logic
         $amount = $request->amount;
         $currentCurrency = session('currency', 'IDR');
         
@@ -102,7 +154,6 @@ class BudgetController extends Controller
 
     public function edit(Budget $budget)
     {
-        // Check authorization
         if ($budget->user_id !== Auth::id()) {
             abort(403);
         }
@@ -117,7 +168,6 @@ class BudgetController extends Controller
             ->whereYear('created_at', now()->year)
             ->sum('amount');
 
-        // Get currency settings
         $currentCurrency = session('currency', 'IDR');
         $exchangeRate = $this->getExchangeRate();
 
@@ -160,7 +210,6 @@ class BudgetController extends Controller
 
     private function getExchangeRate()
     {
-        // Try to get live rate, fallback to default
         try {
             $response = Http::timeout(3)->get('https://api.exchangerate-api.com/v4/latest/USD');
             if ($response->successful()) {
@@ -170,13 +219,8 @@ class BudgetController extends Controller
                     'is_live' => true
                 ];
             }
-        } catch (\Exception $e) {
-            // Fallback to default
-        }
+        } catch (\Exception $e) {}
         
-        return [
-            'rate' => 16000,
-            'is_live' => false
-        ];
+        return ['rate' => 16000, 'is_live' => false];
     }
 }

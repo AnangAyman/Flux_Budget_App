@@ -50,7 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/budget/{budget}', [App\Http\Controllers\BudgetController::class, 'update'])->name('budget.update');
     Route::delete('/budget/{budget}', [App\Http\Controllers\BudgetController::class, 'destroy'])->name('budget.destroy');
 
-    Route::resource('recurring', App\Http\Controllers\RecurringBillController::class);
+    Route::resource('recurring', App\Http\Controllers\RecurringBillController::class)
+    ->parameters(['recurring' => 'recurringBill']);
 });
 
 // 4. Default Redirect

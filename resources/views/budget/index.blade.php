@@ -36,7 +36,10 @@
     @if($budgetData->count() > 0)
     @php
         $totalBudget = $budgetData->sum('budget_limit');
-        $totalSpent = $budgetData->sum('spent');
+        // Total Spent now includes Actual + Recurring Forecast
+        $totalSpent = $budgetData->sum('total_used');
+        $totalActual = $budgetData->sum('spent');
+        $totalRecurring = $budgetData->sum('recurring');
     @endphp
     
     <div class="budget-overview">
@@ -58,10 +61,10 @@
 
         <div class="overview-card">
             <div class="overview-icon spent">
-                <i class="fas fa-arrow-down"></i>
+                <i class="fas fa-chart-line"></i>
             </div>
             <div class="overview-content">
-                <p class="overview-label">{{ __('budget_overview_spent') }}</p>
+                <p class="overview-label">Used & Committed</p>
                 <h3 class="overview-value text-danger">
                     @if($currentCurrency == 'IDR')
                         Rp {{ number_format($totalSpent, 0, ',', '.') }}
@@ -69,6 +72,21 @@
                         $ {{ number_format($totalSpent / $exchangeRate['rate'], 2, '.', ',') }}
                     @endif
                 </h3>
+                <small class="text-muted" style="font-size: 0.8em; opacity: 0.8;">
+                    (Act: 
+                    @if($currentCurrency == 'IDR')
+                         {{ number_format($totalActual / 1000, 0) }}k
+                    @else
+                         {{ number_format($totalActual / $exchangeRate['rate'], 0) }}
+                    @endif
+                    + Rec: 
+                    @if($currentCurrency == 'IDR')
+                         {{ number_format($totalRecurring / 1000, 0) }}k
+                    @else
+                         {{ number_format($totalRecurring / $exchangeRate['rate'], 0) }}
+                    @endif
+                    )
+                </small>
             </div>
         </div>
 
@@ -92,7 +110,6 @@
     <div class="budget-grid">
         @foreach($budgetData as $budget)
         @php
-            // Determine status color
             if ($budget->percentage >= 100 || $budget->is_over_budget) {
                 $statusClass = 'over-budget';
                 $statusText = __('budget_status_over');
@@ -136,6 +153,7 @@
                         @endif
                     </span>
                 </div>
+                
                 <div class="amount-row">
                     <span class="amount-label">{{ __('budget_card_spent') }}</span>
                     <span class="amount-value text-danger">
@@ -146,9 +164,23 @@
                         @endif
                     </span>
                 </div>
-                <div class="amount-row">
-                    <span class="amount-label">{{ __('budget_card_remaining') }}</span>
-                    <span class="amount-value {{ $budget->remaining >= 0 ? 'text-success' : 'text-danger' }}">
+
+                @if($budget->recurring > 0)
+                <div class="amount-row" style="font-size: 0.9em; opacity: 0.8;">
+                    <span class="amount-label"><i class="fas fa-calendar-alt"></i> Upcoming</span>
+                    <span class="amount-value text-warning">
+                        @if($currentCurrency == 'IDR')
+                            + Rp {{ number_format($budget->recurring, 0, ',', '.') }}
+                        @else
+                            + $ {{ number_format($budget->recurring / $exchangeRate['rate'], 2, '.', ',') }}
+                        @endif
+                    </span>
+                </div>
+                @endif
+
+                <div class="amount-row pt-2 mt-2">
+                    <span class="amount-label font-weight-bold">{{ __('budget_card_remaining') }}</span>
+                    <span class="amount-value font-weight-bold {{ $budget->remaining >= 0 ? 'text-success' : 'text-danger' }}">
                         @if($currentCurrency == 'IDR')
                             Rp {{ number_format($budget->remaining, 0, ',', '.') }}
                         @else
@@ -162,7 +194,7 @@
                 <div class="progress-bar">
                     <div class="progress-fill {{ $statusClass }}" style="width: {{ $budget->percentage }}%"></div>
                 </div>
-                <span class="progress-text">{{ __('budget_card_used', ['percentage' => number_format($budget->percentage, 1)]) }}</span>
+                <span class="progress-text">{{ number_format($budget->percentage, 1) }}% Used</span>
             </div>
 
             <div class="budget-actions">
