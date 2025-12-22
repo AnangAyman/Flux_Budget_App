@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics');
+    Route::get('/analytics/export', [AnalyticsController::class, 'export'])->name('analytics.export');
     
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
 

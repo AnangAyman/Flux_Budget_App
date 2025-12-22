@@ -425,4 +425,56 @@ class AnalyticsController extends Controller
             'is_live' => false
         ];
     }
+
+    public function export(Request $request)
+    {
+        $user = Auth::user();
+        $currentCurrency = session('currency', 'IDR');
+        $exchangeRate = $this->getExchangeRate();
+        
+        // 1. Fetch Transactions (Same logic as index)
+        $transactions = Transaction::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // 2. Set Headers for CSV Download
+        $fileName = 'expense_report_' . date('Y-m-d') . '.csv';
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        // 3. Define the Callback to Write Data
+        $callback = function() use ($transactions, $currentCurrency, $exchangeRate) {
+            $file = fopen('php://output', 'w');
+            
+            // CSV Column Headers
+            fputcsv($file, ['Date', 'Type', 'Category', 'Description', 'Amount (' . $currentCurrency . ')', 'Original Amount', 'Original Currency']);
+
+            foreach ($transactions as $transaction) {
+                // Convert amount if needed
+                $displayAmount = $transaction->amount;
+                if ($currentCurrency === 'USD') {
+                    $displayAmount = $transaction->amount / $exchangeRate['rate'];
+                }
+
+                fputcsv($file, [
+                    $transaction->created_at->format('Y-m-d H:i'), // Date
+                    ucfirst($transaction->type),                   // Type (Income/Expense)
+                    $transaction->category ?? 'Uncategorized',     // Category
+                    $transaction->description,                     // Description
+                    number_format($displayAmount, 2, '.', ''),     // Converted Amount
+                    $transaction->amount,                          // Raw Database Amount
+                    'IDR'                                          // Raw Currency (Base)
+                ]);
+            }
+            fclose($file);
+        };
+
+        // 4. Return Streamed Response
+        return response()->stream($callback, 200, $headers);
+    }
 }

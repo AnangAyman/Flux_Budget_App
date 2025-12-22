@@ -21,10 +21,9 @@
             <span>{{ $currentCurrency == 'USD' ? 'USD ($)' : 'IDR (Rp)' }}</span>
         </a>
         
-        <!-- Back to Dashboard -->
-        <a href="{{ route('dashboard') }}" class="btn-secondary-custom">
-            <i class="fas fa-arrow-left"></i>
-            <span>{{ __('analytics_back_dashboard') }}</span>
+        <a href="{{ route('analytics.export') }}" class="btn-primary-custom">
+            <i class="fas fa-file-download"></i>
+            <span>{{ __('Export Report') }}</span>
         </a>
     </div>
 </div>
