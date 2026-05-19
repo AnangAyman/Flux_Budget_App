@@ -1,80 +1,87 @@
-# Flux Budget App 💸
+# Flux Budget App
 
-Flux is a personal finance website designed to serve as your **Digital Financial Wallet**. It solves the problem of unorganized personal finance tracking by providing a secure platform where you can easily record, manage, and review your income and expenses to build better financial awareness.
+A modern, intuitive budget tracking application designed to help you manage your finances efficiently. Built with Laravel.
 
----
+## 📸 Screenshots
 
-## 🔗 Live Demo
-> **Check out the live application here:** [Click Here!](https://fluxbudgetapp-production.up.railway.app/login)
+| Dashboard | Transaction Entry |
+|-----------|-------------------|
+| <!-- Add Dashboard image here --> ![Dashboard](docs/assets/landing_page.jpeg) | <!-- Add Transaction image here --> ![Transaction](docs/assets/transactions.jpeg) |
 
----
+| Monthly Reports | Budget |
+|-----------------|----------|
+| <!-- Add Reports image here --> ![Reports](docs/assets/analytics.jpeg) | <!-- Add Settings image here --> ![Recurring](docs/assets/recurring_bills.jpeg) |
+
+*(Note: Replace the image paths in `docs/assets/` with actual screenshots once available.)*
 
 ## ✨ Features
 
-### 📊 Comprehensive Dashboard & Analytics
-* **Real-time Overview:** Displays your total balance, income, and expenses as they happen.
-* **Visual Insights:** Interactive charts and graphs showing monthly income vs. expenses and categorical breakdowns.
-* **Spending Trends:** Track month-over-month changes to understand your financial patterns.
-* **Exportable Reports:** Download your expense data in CSV format for external use.
+- **Dashboard Overview:** Get a quick glance at your total balance, income, and expenses.
+- **Transaction Management:** Easily add, edit, or delete income and expense records.
+- **Categorization:** Group transactions into custom categories for better tracking.
+- **Visual Reports:** View monthly spending breakdowns and trends.
+- **Responsive Design:** Accessible on both desktop and mobile devices.
 
-### 📝 Smart Transaction Management
-* **Manual Logs:** Add, edit, or delete income and expense records with category and type details.
-* **Receipt Documentation:** Upload images of receipts for better record-keeping.
-* **Advanced Filtering:** Search and filter transactions by date, description, or type.
-* **Live Currency Conversion:** Switch between USD and IDR with a single click.
+## 🚀 Tech Stack
 
-### 🗓️ Budgeting & Automation
-* **Recurring Obligations:** Set one-time entries for monthly bills (e.g., electricity, insurance) that the system automatically tracks.
-* **Spending Limits:** Set categorical budget limits and monitor if you are "On Track" or overspending.
-* **Financial Projections:** Get estimated monthly fixed costs and yearly projections based on your recurring bills.
+- **Backend:** Laravel (PHP)
+- **Database:** MySQL / SQLite
+- **Frontend:** HTML, CSS, JavaScript (Vite)
 
-### 💡 Intelligence & User Experience
-* **Personalized Recommendations:** Receive smart suggestions to optimize your budget, such as diversifying income or reducing high fixed costs.
-* **Customization:** Support for both Light and Dark modes and language preferences.
+## 🛠️ Getting Started
 
-## 🛠️ Tech Stack
-* **Backend:** [Laravel](https://laravel.com/) (PHP)
-* **Frontend:** Blade Templates, Bootstrap, Vanilla CSS JS
-* **Database:** MySQL
-* **Tools:** Composer, CSV Exporting
-
-## 🚀 Installation & Setup
+Follow these steps to set up the project locally.
 
 ### Prerequisites
-* PHP 8.1+
-* Composer
-* MySQL Database
 
-1.  **Clone the Repository**
-    ```bash
-    git clone [https://github.com/AnangAyman/Flux_Budget_App.git](https://github.com/AnangAyman/Flux_Budget_App.git)
-    cd Flux_Budget_App
-    ```
+- PHP 8.1+
+- Composer
+- Node.js & NPM
+- Database (MySQL/SQLite)
 
-2.  **Install Dependencies**
-    ```bash
-    composer install
-    ```
+### Installation
 
-3.  **Environment Setup**
-    ```bash
-    cp .env.example .env
-    php artisan key:generate
-    ```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/Flux_Budget_App.git
+   cd Flux_Budget_App
+   ```
 
-4.  **Database Configuration**
-    Update the `.env` file with your local database credentials.
+2. **Install dependencies:**
+   ```bash
+   composer install
+   npm install
+   ```
 
-5.  **Run Migrations**
-    ```bash
-    php artisan migrate
-    ```
+3. **Environment Setup:**
+   ```bash
+   cp .env.example .env
+   ```
+   Update `.env` with your database credentials.
 
-6.  **Launch the App**
-    ```bash
-    php artisan serve
-    ```
+4. **Generate Application Key:**
+   ```bash
+   php artisan key:generate
+   ```
 
----
+5. **Run Migrations & Seeders:**
+   ```bash
+   php artisan migrate --seed
+   ```
 
-**Project Link:** [https://github.com/AnangAyman/Flux_Budget_App](https://github.com/AnangAyman/Flux_Budget_App)
+6. **Build Frontend Assets:**
+   ```bash
+   npm run build
+   # or for development: npm run dev
+   ```
+
+7. **Start the Development Server:**
+   ```bash
+   php artisan serve
+   ```
+
+Visit `http://localhost:8000` in your browser.
+
+## 📄 License
+
+The Flux Budget App is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
